@@ -62,3 +62,7 @@ typings/
 
 # Credentials
 auth.json
+
+# JS
+*.js
+*.js.map
