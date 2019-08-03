@@ -1,0 +1,6 @@
+{
+    "api": {
+        "endpoint": "<ekm-api-Endpoint-value>",
+        "key": "<ekm-api-API-Key-value>"
+    }
+}
