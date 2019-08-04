@@ -8,7 +8,6 @@
     "lint": "npx tslint -p tsconfig.json",
     "lint:fix": "npx tslint --fix -p tsconfig.json",
     "start": "npm run -s build && node ./start.js",
-    "test": "npm run build && npx ava",
     "transpile": "tsc -p .",
     "watch": "nodemon -e ts --exec \"npm run start\""
   },
@@ -24,7 +23,6 @@
   },
   "homepage": "https://github.com/b3nThomas/ekm-product-inventory-updater#readme",
   "devDependencies": {
-    "ava": "^2.2.0",
     "nodemon": "^1.19.1",
     "tslint": "^5.18.0",
     "tslint-eslint-rules": "^5.4.0",
