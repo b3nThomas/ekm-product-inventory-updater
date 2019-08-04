@@ -60,9 +60,8 @@ typings/
 # next.js build output
 .next
 
-# Credentials
-auth.json
-
-# JS
+# App
+app/auth.json
+app/data.csv
 *.js
 *.js.map

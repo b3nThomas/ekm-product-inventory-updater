@@ -1,0 +1,336 @@
+{config: { url: 'http: //publicapi.30.ekm.net/v1.1/publicapi.asmx',
+     method: 'post',
+     data: '<?xml version="1.0" encoding="UTF-8"?><soap:Body/>',
+     headers: { Accept: 'text/xml',
+        'Content-Type': 'text/xml',
+        'User-Agent': 'axios/0.19.0',
+        'Content-Length': 50
+    },
+     transformRequest: [
+      [Function: transformRequest
+      ]
+    ],
+     transformResponse: [
+      [Function: transformResponse
+      ]
+    ],
+     timeout: 0,
+     adapter: [Function: httpAdapter
+    ],
+     xsrfCookieName: 'XSRF-TOKEN',
+     xsrfHeaderName: 'X-XSRF-TOKEN',
+     maxContentLength: -1,
+     validateStatus: [Function: validateStatus
+    ]
+  },
+  request:
+   ClientRequest {
+     _events: [Object: null prototype
+    ] {
+        socket: [Function
+      ],
+        abort: [Function
+      ],
+        aborted: [Function
+      ],
+        error: [Function
+      ],
+        timeout: [Function
+      ],
+        prefinish: [Function: requestOnPrefinish
+      ]
+    },
+     _eventsCount: 6,
+     _maxListeners: undefined,
+     output: [],
+     outputEncodings: [],
+     outputCallbacks: [],
+     outputSize: 0,
+     writable: true,
+     _last: true,
+     chunkedEncoding: false,
+     shouldKeepAlive: false,
+     useChunkedEncodingByDefault: true,
+     sendDate: false,
+     _removedConnection: false,
+     _removedContLen: false,
+     _removedTE: false,
+     _contentLength: null,
+     _hasBody: true,
+     _trailer: '',
+     finished: true,
+     _headerSent: true,
+     socket:
+      Socket {
+        connecting: false,
+        _hadError: false,
+        _handle: [TCP
+      ],
+        _parent: null,
+        _host: 'publicapi.30.ekm.net',
+        _readableState: [ReadableState
+      ],
+        readable: true,
+        _events: [Object
+      ],
+        _eventsCount: 7,
+        _maxListeners: undefined,
+        _writableState: [WritableState
+      ],
+        writable: false,
+        allowHalfOpen: false,
+        _sockname: null,
+        _pendingData: null,
+        _pendingEncoding: '',
+        server: null,
+        _server: null,
+        parser: null,
+        _httpMessage: [Circular
+      ],
+      [Symbol(asyncId)
+      ]: 743,
+      [Symbol(lastWriteQueueSize)
+      ]: 0,
+      [Symbol(timeout)
+      ]: null,
+      [Symbol(kBytesRead)
+      ]: 0,
+      [Symbol(kBytesWritten)
+      ]: 0
+    },
+     connection:
+      Socket {
+        connecting: false,
+        _hadError: false,
+        _handle: [TCP
+      ],
+        _parent: null,
+        _host: 'publicapi.30.ekm.net',
+        _readableState: [ReadableState
+      ],
+        readable: true,
+        _events: [Object
+      ],
+        _eventsCount: 7,
+        _maxListeners: undefined,
+        _writableState: [WritableState
+      ],
+        writable: false,
+        allowHalfOpen: false,
+        _sockname: null,
+        _pendingData: null,
+        _pendingEncoding: '',
+        server: null,
+        _server: null,
+        parser: null,
+        _httpMessage: [Circular
+      ],
+      [Symbol(asyncId)
+      ]: 743,
+      [Symbol(lastWriteQueueSize)
+      ]: 0,
+      [Symbol(timeout)
+      ]: null,
+      [Symbol(kBytesRead)
+      ]: 0,
+      [Symbol(kBytesWritten)
+      ]: 0
+    },
+     _header:
+      'POST /v1.1/publicapi.asmx HTTP/1.1\r\nAccept: text/xml\r\nContent-Type: text/xml\r\nUser-Agent: axios/0.19.0\r\nContent-Length: 50\r\nHost: publicapi.30.ekm.net\r\nConnection: close\r\n\r\n',
+     _onPendingData: [Function: noopPendingOutput
+    ],
+     agent:
+      Agent {
+        _events: [Object
+      ],
+        _eventsCount: 1,
+        _maxListeners: undefined,
+        defaultPort: 80,
+        protocol: 'http:',
+        options: [Object
+      ],
+        requests: {},
+        sockets: [Object
+      ],
+        freeSockets: {},
+        keepAliveMsecs: 1000,
+        keepAlive: false,
+        maxSockets: Infinity,
+        maxFreeSockets: 256
+    },
+     socketPath: undefined,
+     timeout: undefined,
+     method: 'POST',
+     path: '/v1.1/publicapi.asmx',
+     _ended: true,
+     res:
+      IncomingMessage {
+        _readableState: [ReadableState
+      ],
+        readable: false,
+        _events: [Object
+      ],
+        _eventsCount: 3,
+        _maxListeners: undefined,
+        socket: [Socket
+      ],
+        connection: [Socket
+      ],
+        httpVersionMajor: 1,
+        httpVersionMinor: 1,
+        httpVersion: '1.1',
+        complete: true,
+        headers: [Object
+      ],
+        rawHeaders: [Array
+      ],
+        trailers: {},
+        rawTrailers: [],
+        aborted: false,
+        upgrade: false,
+        url: '',
+        method: null,
+        statusCode: 500,
+        statusMessage: 'Internal Server Error',
+        client: [Socket
+      ],
+        _consuming: false,
+        _dumped: false,
+        req: [Circular
+      ],
+        responseUrl: 'http: //publicapi.30.ekm.net/v1.1/publicapi.asmx',
+        redirects: []
+    },
+     aborted: undefined,
+     timeoutCb: null,
+     upgradeOrConnect: false,
+     parser: null,
+     maxHeadersCount: null,
+     _redirectable:
+      Writable {
+        _writableState: [WritableState
+      ],
+        writable: true,
+        _events: [Object
+      ],
+        _eventsCount: 2,
+        _maxListeners: undefined,
+        _options: [Object
+      ],
+        _redirectCount: 0,
+        _redirects: [],
+        _requestBodyLength: 50,
+        _requestBodyBuffers: [],
+        _onNativeResponse: [Function
+      ],
+        _currentRequest: [Circular
+      ],
+        _currentUrl: 'http: //publicapi.30.ekm.net/v1.1/publicapi.asmx' }, [Symbol(isCorked)
+      ]: false,
+      [Symbol(outHeadersKey)
+      ]: [Object: null prototype
+      ] {
+        accept: [Array
+        ],
+        'content-type': [Array
+        ],
+        'user-agent': [Array
+        ],
+        'content-length': [Array
+        ],
+        host: [Array
+        ]
+      }
+    },
+  response: { status: 500,
+     statusText: 'Internal Server Error',
+     headers: { 'cache-control': 'private',
+        'content-type': 'application/soap+xml; charset=utf-8',
+        server: 'Microsoft-IIS/8.0',
+        'x-aspnet-version': '4.0.30319',
+        'x-powered-by': 'ASP.NET',
+        date: 'Sun,
+        04 Aug 2019 14: 43: 03 GMT',
+        connection: 'close',
+        'content-length': '507'
+      },
+     config: { url: 'http: //publicapi.30.ekm.net/v1.1/publicapi.asmx',
+        method: 'post',
+        data: '<?xml version="1.0" encoding="UTF-8"?><soap:Body/>',
+        headers: [Object
+        ],
+        transformRequest: [Array
+        ],
+        transformResponse: [Array
+        ],
+        timeout: 0,
+        adapter: [Function: httpAdapter
+        ],
+        xsrfCookieName: 'XSRF-TOKEN',
+        xsrfHeaderName: 'X-XSRF-TOKEN',
+        maxContentLength: -1,
+        validateStatus: [Function: validateStatus
+        ]
+      },
+     request:
+      ClientRequest {
+        _events: [Object
+        ],
+        _eventsCount: 6,
+        _maxListeners: undefined,
+        output: [],
+        outputEncodings: [],
+        outputCallbacks: [],
+        outputSize: 0,
+        writable: true,
+        _last: true,
+        chunkedEncoding: false,
+        shouldKeepAlive: false,
+        useChunkedEncodingByDefault: true,
+        sendDate: false,
+        _removedConnection: false,
+        _removedContLen: false,
+        _removedTE: false,
+        _contentLength: null,
+        _hasBody: true,
+        _trailer: '',
+        finished: true,
+        _headerSent: true,
+        socket: [Socket
+        ],
+        connection: [Socket
+        ],
+        _header:
+         'POST /v1.1/publicapi.asmx HTTP/1.1\r\nAccept: text/xml\r\nContent-Type: text/xml\r\nUser-Agent: axios/0.19.0\r\nContent-Length: 50\r\nHost: publicapi.30.ekm.net\r\nConnection: close\r\n\r\n',
+        _onPendingData: [Function: noopPendingOutput
+        ],
+        agent: [Agent
+        ],
+        socketPath: undefined,
+        timeout: undefined,
+        method: 'POST',
+        path: '/v1.1/publicapi.asmx',
+        _ended: true,
+        res: [IncomingMessage
+        ],
+        aborted: undefined,
+        timeoutCb: null,
+        upgradeOrConnect: false,
+        parser: null,
+        maxHeadersCount: null,
+        _redirectable: [Writable
+        ],
+        [Symbol(isCorked)
+        ]: false,
+        [Symbol(outHeadersKey)
+        ]: [Object
+        ]
+      },
+     data:
+      '<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><soap:Fault><soap:Code><soap:Value>soap:Receiver</soap:Value></soap:Code><soap:Reason><soap:Text xml:lang="en">Server was unable to process request. ---&gt; \'soap\' is an undeclared prefix. Line 1, position 40.</soap:Text></soap:Reason><soap:Detail /></soap:Fault></soap:Body></soap:Envelope>'
+    },
+  isAxiosError: true,
+  toJSON: [Function
+    ]
+  }

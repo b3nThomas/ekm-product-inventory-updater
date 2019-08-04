@@ -1,9 +1,8 @@
 import axios from 'axios';
 import * as colors from 'colors';
-import * as convert from 'xml-js';
-import * as DOMParser from 'dom-parser';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as xml from 'xml';
 
 export interface EKMAuth {
     endpoint: string;
@@ -15,10 +14,10 @@ export class EKMClient {
     private requestHeaders: any = {
         headers: {
             'Accept': 'text/xml',
-            'Content-Type': 'text/xml'
+            'Content-Type': 'text/xml; charset="utf-8"',
+            'SOAPAction': 'http://publicapi.ekmpowershop.com/SetProductStock'
         }
     };
-    private parser: any = new DOMParser();
     private errors: string[] = [];
 
     constructor() {
@@ -46,34 +45,51 @@ export class EKMClient {
     }
 
     public async setProductStock(productCode: string, stockCount: number): Promise<any> {
-        // http://publicapi.30.ekm.net/v1.1/publicapi.asmx?op=SetProductStock
-        let xmlTemplate: any = `
-            <?xml version="1.0" encoding="UTF-8"?><soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-                <soap:Body>
-                    <SetProductStock xmlns="http://publicapi.ekmpowershop.com/">
-                        <SetProductStockRequest>
-                            <APIKey>${this.auth.key}</APIKey>
-                            <ProductCode>${productCode}</ProductCode>
-                            <ProductStock>${stockCount}</ProductStock>
-                        </SetProductStockRequest>
-                    </SetProductStock>
-                </soap:Body>
-            </soap:Envelope>
-        `.replace(/\n/g, '').trim();
-        xmlTemplate = this.parser.parseFromString(xmlTemplate, 'text/xml').rawHTML;
-
-        return axios
-            .post(this.auth.endpoint, xmlTemplate, this.requestHeaders)
-            .then(res => {
-                return convert.xml2js(res.data, { compact: true });
-            })
-            .catch(err => {
-                console.log(colors.red(`setStockCount request failed for item "${productCode}"\n`));
-                console.log(err.respone.data);
-                this.errors.push(productCode);
-                return;
+        const xmlTemplate = [
+            {
+                'soap:Envelope': [
+                    {
+                        _attr: {
+                            'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+                            'xmlns:xsd': 'http://www.w3.org/2001/XMLSchema',
+                            'xmlns:soap': 'http://schemas.xmlsoap.org/soap/envelope/'
+                        }
+                    },
+                    {
+                        'soap:Body': [
+                            {
+                                SetProductStock: [
+                                    {
+                                        _attr: {
+                                            xmlns: 'http://publicapi.ekmpowershop.com/'
+                                        }
+                                    },
+                                    {
+                                        SetProductStockRequest: [
+                                            { APIKey: this.auth.key },
+                                            { ProductCode: productCode },
+                                            { ProductStock: stockCount }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
             }
-        );
+        ];
+
+        const xmlEl = xml(xmlTemplate, { declaration: true });
+        try {
+            // const res = await soapRequest(this.auth.endpoint, this.requestHeaders, xmlTemplate, 5000);
+            const res = await axios.post(this.auth.endpoint, xmlEl, this.requestHeaders);
+            console.log(res.data);
+            return res;
+        } catch (err) {
+            console.log(colors.green(err));
+            this.errors.push(productCode);
+            return;
+        }
     }
 
     public getErrors(): string[] {

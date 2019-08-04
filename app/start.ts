@@ -42,7 +42,9 @@ const ekmClient = new EKMClient();
             }
 
             promises.push(new Promise(async (resolve, _reject) => {
-                await ekmClient.setProductStock(entry.ItemID, entry.Quantity);
+                console.log(typeof entry.Stock);
+                console.log(entry.Stock);
+                await ekmClient.setProductStock(entry.ItemID, entry.Stock);
                 bar.tick();
                 if (bar.complete) {
                     console.log(colors.green.bold('\n✔  All done! 🍻\n'));
