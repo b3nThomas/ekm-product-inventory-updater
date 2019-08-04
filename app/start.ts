@@ -3,7 +3,7 @@ import * as parseCSV from 'csv-parse';
 import * as ProgressBer from 'progress';
 import * as fs from 'fs';
 import * as path from 'path';
-import { EKMClient } from './app/EKMClient';
+import { EKMClient } from './EKMClient';
 
 console.log(colors.cyan.bold('⚠︎ Starting EKM Product Inventory Updater...\n'));
 const ekmClient = new EKMClient();

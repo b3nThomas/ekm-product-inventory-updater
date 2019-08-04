@@ -2,12 +2,12 @@
   "name": "ekm-product-inventory-updater",
   "version": "1.0.0",
   "description": "Simple tool which accepts .csv files to update product quantities in the EKM - Advanced Inventory Manager This project uses `Node 10.16.1` and Typescript",
-  "main": "start.js",
+  "main": "./app/start.js",
   "scripts": {
     "build": "npm run -s lint && npm run -s transpile",
     "lint": "npx tslint -p tsconfig.json",
     "lint:fix": "npx tslint --fix -p tsconfig.json",
-    "start": "npm run -s build && node ./start.js",
+    "start": "npm run -s build && node ./app/start.js",
     "transpile": "tsc -p .",
     "watch": "nodemon -e ts --exec \"npm run start\""
   },
