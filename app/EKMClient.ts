@@ -19,6 +19,7 @@ export class EKMClient {
         }
     };
     private parser: any = new DOMParser();
+    private errors: string[] = [];
 
     constructor() {
         this.getAuth();
@@ -60,13 +61,12 @@ export class EKMClient {
             </soap:Envelope>
         `.replace(/\n/g, '').trim();
         xmlTemplate = this.parser.parseFromString(xmlTemplate, 'text/xml').rawHTML;
-        try {
-            let res: any = await axios.post(this.auth.endpoint, xmlTemplate, this.requestHeaders);
-            res = convert.xml2js(res.data, { compact: true });
-            return res;
-        } catch (err) {
+        let res: any = await axios.post(this.auth.endpoint, xmlTemplate, this.requestHeaders).catch((err) => {
             console.log(colors.red(`setStockCount request failed for item "${productCode}"\n`));
-            console.log(colors.red(err));
-        }
+            this.errors.push(productCode);
+            return;
+        });
+        res = convert.xml2js(res.data, { compact: true });
+        return res;
     }
 }

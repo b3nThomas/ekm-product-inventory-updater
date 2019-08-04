@@ -34,7 +34,7 @@ const ekmClient = new EKMClient();
                 promises.length = 0;
             }
 
-            if (!entry.ItemID || !entry.Stock) {
+            if (!('ItemID' in entry) || !('Stock' in entry)) {
                 console.error(colors.red('✖︎ Invalid product entry found. Skipping...'));
                 console.error(colors.red(entry));
                 bar.tick();
