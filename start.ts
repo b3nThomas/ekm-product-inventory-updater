@@ -1,27 +1,54 @@
 import * as colors from 'colors';
+import * as parseCSV from 'csv-parse';
+import * as ProgressBer from 'progress';
 import * as fs from 'fs';
 import * as path from 'path';
 import { EKMClient } from './app/EKMClient';
 
-import * as csv from 'convert-csv-to-json'; // REPLACE
-
+console.log(colors.cyan.bold('⚠︎ Starting EKM Product Inventory Updater...\n'));
 const ekmClient = new EKMClient();
 
 (async () => {
-    let data;
+    let csv;
     try {
-        data = csv.fieldDelimiter(',').generateJsonFileFromCsv(path.resolve('app', 'data.csv'), path.resolve('app', 'data.json'));
+        csv = fs.readFileSync(path.resolve('app', 'data.csv'), { encoding: 'utf-8' }); // tslint:disable-line
     } catch (err) {
-        console.log(colors.red('Unable to locate ./app/data.csv file. See README.md. Aborting...\n'));
+        console.log(colors.red('✖ ︎Unable to locate ./app/data.csv file. See README.md. Aborting...\n'));
         process.exit(1);
     }
+    parseCSV(csv, { columns: true }, async (err, output) => {
+        if (err) {
+            console.error(colors.red('✖︎ Error parsing data.csv. Please retry. Aborting...\n'));
+            return process.exit(1);
+        }
 
-    const json = fs.readFileSync(path.resolve('app', 'data.json'), { encoding: 'utf-8' }); // tslint:disable-line
+        console.log(colors.yellow.bold(`⚠︎ ${output.length} products to update...\n`));
 
-    console.log(json);
-    const current = await ekmClient.getProducStock('SALTEA');
-    console.log(colors.green(`SALTEA: ${current} in stock`));
-    const sold = 4;
-    const newAmount = current + sold;
-    ekmClient.setProductStock('SALTEA', newAmount);
+        const throttle = 10;
+        const promises = [];
+        const bar = new ProgressBer(colors.magenta.bold('⚙︎ :current / :total :bar :percent (:elapseds)'), { total:  output.length, width: 50 });
+
+        for (const entry of output) {
+            if (promises.length === throttle) {
+                await Promise.all(promises);
+                promises.length = 0;
+            }
+
+            if (!entry.ItemID || !entry.Quantity) {
+                console.error(colors.red('✖︎ Invalid product entry found. Skipping...'));
+                console.error(colors.red(entry));
+                bar.tick();
+                continue;
+            }
+
+            promises.push(new Promise(async (resolve, _reject) => {
+                await ekmClient.setProductStock(entry.ItemID, entry.Quantity);
+                bar.tick();
+                if (bar.complete) {
+                    console.log(colors.green.bold('\n✔  All done! 🍻\n'));
+                }
+                return resolve();
+            }));
+        }
+    });
 })();

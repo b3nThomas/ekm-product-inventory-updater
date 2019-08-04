@@ -41,39 +41,11 @@ export class EKMClient {
             endpoint: authFile.endpoint,
             key: authFile.key
         }
-        console.log(colors.green('Authorization credentials retrieved 👍\n'));
-    }
-
-    public async getProducStock(productCode: string): Promise<number> {
-        console.log(`Requesting product stock count for product code "${productCode}"...`);
-        // http://publicapi.30.ekm.net/v1.1/publicapi.asmx?op=GetProductStock
-        let xmlTemplate: any = `
-            <?xml version="1.0" encoding="UTF-8"?><soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-                <soap:Body>
-                    <GetProductStock xmlns="http://publicapi.ekmpowershop.com/">
-                        <GetProductStockRequest>
-                            <APIKey>${this.auth.key}</APIKey>
-                            <ProductCode>${productCode}</ProductCode>
-                        </GetProductStockRequest>
-                    </GetProductStock>
-                </soap:Body>
-            </soap:Envelope>
-        `.replace(/\n/g, '').trim();
-        xmlTemplate = this.parser.parseFromString(xmlTemplate, 'text/xml').rawHTML;
-        try {
-            let res: any = await axios.post(this.auth.endpoint, xmlTemplate, this.requestHeaders);
-            res = convert.xml2js(res.data, { compact: true });
-            const count = parseInt(res['soap:Envelope']['soap:Body']['GetProductStockResponse']['GetProductStockResult']['ProductStock']['_text'], 10);
-            return count;
-        } catch (err) {
-            console.log(colors.red(`getStockCount request failed for item "${productCode}"\n`));
-            console.log(colors.red(err));
-        }
+        console.log(colors.green.bold('✔ Credentials authorised\n'));
     }
 
     public async setProductStock(productCode: string, stockCount: number): Promise<any> {
         // http://publicapi.30.ekm.net/v1.1/publicapi.asmx?op=SetProductStock
-        console.log(`Setting product stock count to "${stockCount}" for product code "${productCode}"...`);
         let xmlTemplate: any = `
             <?xml version="1.0" encoding="UTF-8"?><soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
                 <soap:Body>
