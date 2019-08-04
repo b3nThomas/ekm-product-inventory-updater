@@ -85,7 +85,6 @@ export class EKMClient {
             res = xml2js(res.data);
             res = res.elements[0].elements[0].elements[0].elements[0];
             if (res.elements[0].elements[0].text === 'Failure') {
-                console.log(colors.red(JSON.stringify({ productCode, reason: res.elements[1].elements[0].elements[0].text })));
                 this.errors.push({ productCode, reason: res.elements[1].elements[0].elements[0].text });
             } else {
                 console.log(colors.green.bold(`Updated: ${productCode}`));
