@@ -3,7 +3,7 @@ import * as colors from 'colors';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as xml from 'xml';
-
+import { xml2js } from 'xml-js';
 export interface EKMAuth {
     endpoint: string;
     key: string;
@@ -18,7 +18,7 @@ export class EKMClient {
             'SOAPAction': 'http://publicapi.ekmpowershop.com/SetProductStock'
         }
     };
-    private errors: string[] = [];
+    private errors: any[] = [];
 
     constructor() {
         this.getAuth();
@@ -44,7 +44,7 @@ export class EKMClient {
         console.log(colors.green.bold('✔ Credentials authorised\n'));
     }
 
-    public async setProductStock(productCode: string, stockCount: number): Promise<any> {
+    public async setProductStock(productCode: string, stockCount: number): Promise<void> {
         const xmlTemplate = [
             {
                 'soap:Envelope': [
@@ -81,14 +81,17 @@ export class EKMClient {
 
         const xmlEl = xml(xmlTemplate, { declaration: true });
         try {
-            // const res = await soapRequest(this.auth.endpoint, this.requestHeaders, xmlTemplate, 5000);
-            const res = await axios.post(this.auth.endpoint, xmlEl, this.requestHeaders);
-            console.log(res.data);
-            return res;
+            let res: any = await axios.post(this.auth.endpoint, xmlEl, this.requestHeaders);
+            res = xml2js(res.data);
+            res = res.elements[0].elements[0].elements[0].elements[0];
+            if (res.elements[0].elements[0].text === 'Failure') {
+                console.log(colors.red(JSON.stringify({ productCode, reason: res.elements[1].elements[0].elements[0].text })));
+                this.errors.push({ productCode, reason: res.elements[1].elements[0].elements[0].text });
+            } else {
+                console.log(colors.green.bold(`Updated: ${productCode}`));
+            }
         } catch (err) {
-            console.log(colors.green(err));
-            this.errors.push(productCode);
-            return;
+            this.errors.push({ productCode, reason: err });
         }
     }
 
