@@ -46,6 +46,11 @@ const ekmClient = new EKMClient();
                 bar.tick();
                 if (bar.complete) {
                     console.log(colors.green.bold('\n✔  All done! 🍻\n'));
+                    const errors = ekmClient.getErrors();
+                    if (errors.length) {
+                        console.log(colors.red(`Failed to update ${errors.length} products:`));
+                        console.log(errors);
+                    }
                 }
                 return resolve();
             }));

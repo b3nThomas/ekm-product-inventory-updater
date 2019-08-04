@@ -69,4 +69,8 @@ export class EKMClient {
         res = convert.xml2js(res.data, { compact: true });
         return res;
     }
+
+    public getErrors(): string[] {
+        return this.errors;
+    }
 }
