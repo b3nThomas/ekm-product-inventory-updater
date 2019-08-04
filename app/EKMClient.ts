@@ -62,7 +62,7 @@ export class EKMClient {
         `.replace(/\n/g, '').trim();
         xmlTemplate = this.parser.parseFromString(xmlTemplate, 'text/xml').rawHTML;
 
-        await axios
+        return axios
             .post(this.auth.endpoint, xmlTemplate, this.requestHeaders)
             .then(res => {
                 return convert.xml2js(res.data, { compact: true });
