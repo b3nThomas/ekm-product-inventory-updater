@@ -22,7 +22,7 @@ const ekmClient = new EKMClient();
             return process.exit(1);
         }
 
-        console.log(colors.yellow.bold(`⚠︎ ${output.length} products to update...\n`));
+        console.log(colors.yellow.bold(`⚠︎ ${output.length} products to update\n`));
 
         const throttle = 10;
         const promises = [];
