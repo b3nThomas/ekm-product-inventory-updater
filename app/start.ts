@@ -1,6 +1,6 @@
 import * as colors from 'colors';
 import * as parseCSV from 'csv-parse';
-import * as ProgressBer from 'progress';
+import * as ProgressBar from 'progress';
 import * as fs from 'fs';
 import * as path from 'path';
 import { EKMClient } from './EKMClient';
@@ -25,9 +25,9 @@ const ekmClient = new EKMClient();
         console.log(colors.yellow.bold(`★ ${output.length} products to update...\n`));
 
         const threads = 1;
-        const throttle = 3000;
+        const throttle = 3250;
         const promises = [];
-        const bar = new ProgressBer(colors.magenta.bold('★ :current / :total :bar :percent (:elapseds)'), { total:  output.length, width: 50 });
+        const bar = new ProgressBar(colors.magenta.bold('★ :current / :total :bar :percent (:elapseds)'), { total:  output.length, width: 75 });
 
         for (const entry of output) {
             if (promises.length === threads) {
