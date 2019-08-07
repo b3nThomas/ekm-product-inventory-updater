@@ -65,3 +65,4 @@ app/auth.json
 app/data.csv
 *.js
 *.js.map
+reports
