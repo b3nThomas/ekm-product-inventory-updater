@@ -5,7 +5,7 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import { EKMClient } from './EKMClient';
 
-console.log(colors.magenta.bold('★ Starting EKM Product Inventory Updater...\n'));
+console.log(colors.cyan.bold('★ Starting EKM Product Inventory Updater...\n'));
 const ekmClient = new EKMClient();
 
 (async () => {
