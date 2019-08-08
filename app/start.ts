@@ -5,11 +5,11 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import { EKMClient } from './EKMClient';
 
-console.log(colors.cyan.bold('★ Starting EKM Product Inventory Updater...\n'));
+console.log(colors.magenta.bold('★ Starting EKM Product Inventory Updater...\n'));
 const ekmClient = new EKMClient();
 
 (async () => {
-    console.time('Export took');
+    const start = new Date().getTime();
     let csv;
     try {
         csv = fs.readFileSync(path.resolve('app', 'data.csv'), { encoding: 'utf-8' }); // tslint:disable-line
@@ -26,7 +26,7 @@ const ekmClient = new EKMClient();
         console.log(colors.yellow.bold(`★ ${output.length} products to update...\n`));
 
         const threads = 1;
-        const throttle = 3250;
+        const throttle = 1250;
         const promises = [];
         const bar = new ProgressBar(colors.magenta.bold('★ :current / :total :bar :percent (:elapseds)'), { total:  output.length, width: 75 });
 
@@ -47,18 +47,24 @@ const ekmClient = new EKMClient();
                 await ekmClient.setProductStock(entry.ItemID, entry.Stock);
                 bar.tick();
                 if (bar.complete) {
-                    const completed = ekmClient.getCompleted();
+                    const tag = `${new Date().toISOString()}.json`.replace(/:/g, '');
+                    const updates = ekmClient.getUpdates();
                     const errors = ekmClient.getErrors();
-                    const tag = `${new Date().toISOString()}.json`;
+
+                    console.log(colors.green.bold(`\n✔ Export complete (${updates.length} products updated)`));
+                    const end = new Date().getTime();
+                    const d = end - start;
+                    console.log(colors.magenta.bold(`\n★ Duration: ${Math.round(d / 1000 / 60 * 10) / 10}mins`));
+
                     if (errors.length) {
-                        console.log(colors.red.bold(`\n✘ Failed to update ${errors.length} products:\n`));
-                        errors.forEach(err => console.log(colors.red.bold(err)));
+                        console.log(colors.red.bold(`\n✘ Failed to update ${errors.length} products (See ./reports/${tag})`));
                     }
-                    console.log(colors.green.bold(`\n✔ All done! (${completed} products updated) 🍻\n`));
-                    console.timeEnd('Export took');
-                    fs.ensureDirSync(path.resolve('reports'));
-                    fs.ensureFileSync(path.resolve('reports', tag));
-                    fs.writeFileSync(path.resolve('reports', tag), JSON.stringify({ updated: completed, errors }, null, 4));
+
+                    fs.ensureDirSync(path.resolve('reports').replace(/\\/g, '/'));
+                    fs.ensureFileSync(path.resolve('reports', tag).replace(/\\/g, '/'));
+                    fs.writeFileSync(path.resolve('reports', tag).replace(/\\/g, '/'), JSON.stringify({ errors, updates }, null, 4));
+                    console.log(colors.cyan.cyan.bold('\n✔ Report created\n'));
+                    console.log(colors.green.green.bold('✔ All done! 🍻\n'));
                     return;
                 }
                 setTimeout(() => {
@@ -66,5 +72,7 @@ const ekmClient = new EKMClient();
                 }, throttle);
             }));
         }
+
     });
+
 })();

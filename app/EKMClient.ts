@@ -18,8 +18,8 @@ export class EKMClient {
             'SOAPAction': 'http://publicapi.ekmpowershop.com/SetProductStock'
         }
     };
-    private completed: number = 0;
-    private errors: any[] = [];
+    private updates: object[] = [];
+    private errors: object[] = [];
 
     constructor() {
         this.getAuth();
@@ -88,19 +88,18 @@ export class EKMClient {
             if (res.elements[0].elements[0].text === 'Failure') {
                 this.errors.push({ productCode, reason: res.elements[1].elements[0].elements[0].text });
             } else {
-                console.log(colors.green.bold(`Updated: ${productCode}`));
-                this.completed++;
+                this.updates.push({ productCode, stock: stockCount });
             }
         } catch (err) {
             this.errors.push({ productCode, reason: err });
         }
     }
 
-    public getCompleted(): number {
-        return this.completed;
+    public getUpdates(): object[] {
+        return this.updates;
     }
 
-    public getErrors(): string[] {
+    public getErrors(): object[] {
         return this.errors;
     }
 }
