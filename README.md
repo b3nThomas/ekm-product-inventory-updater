@@ -1,9 +1,11 @@
 # ekm-product-inventory-updater
 Simple app which accepts .csv files to update product quantities in the `EKM - Advanced Inventory Manager`.  
+This previously used their API, however they're now charging a lot of extra money for that service.  
+It now uses <software> to automate the manual update process which is free!  
 
 ## Installation
 
-**This app requires `node.js v10.16.1`.**  
+**This app requires `node.js v12.18.3`.**  
 
 Then:
 
@@ -19,7 +21,7 @@ In order to run this app, you must do the following:
 ### EKM Auth
   - Create a file in the `app` folder called `auth.json`
   - Copy the content from `./app/auth.json.template` into your new file
-  - Update the field values to match that of the [EKM-API feature section](https://youraccount.30.ekm.net/ekmps/shops/features_api.asp)
+  - Update the field values to include your EKM login credentials
   - These credentials are ignored by .git so will only ever exist on your local machine 👍
 
 ## Input CSV file

@@ -19,34 +19,31 @@ const ekmClient = new EKMClient();
     }
     parseCSV(csv, { columns: true }, async (err, output) => {
         if (err) {
-            console.error(colors.red('✖︎ Error parsing data.csv. Please retry. Aborting...\n'));
+            console.error(colors.red.bold('✖︎ Error parsing data.csv. Please retry. Aborting...\n'));
             return process.exit(1);
         }
 
         console.log(colors.yellow.bold(`★ ${output.length} products to update...\n`));
 
-        const threads = 1;
-        const throttle = 1250;
-        const promises = [];
-        const bar = new ProgressBar(colors.magenta.bold('★ :current / :total :bar :percent (:elapseds)'), { total:  output.length, width: 75 });
+        try {
+            await ekmClient.startBrowser();
+            await ekmClient.signIn();
 
-        for (const entry of output) {
-            if (promises.length === threads) {
-                await Promise.all(promises);
-                promises.length = 0;
-            }
+            const bar = new ProgressBar(colors.magenta.bold('★ :current / :total :bar :percent (:elapseds)'), { total: output.length, width: 75 });
 
-            if (!('ItemID' in entry) || !('Stock' in entry)) {
-                console.error(colors.red('✘ Invalid product entry found. Skipping...'));
-                console.error(colors.red(entry));
+            for (const entry of output) {
+                if (!('ItemID' in entry) || !('Stock' in entry)) {
+                    console.error(colors.red.bold('✘ Invalid product entry found. Skipping...'));
+                    console.error(colors.red.bold(entry));
+                    bar.tick();
+                    continue;
+                }
+
+                await ekmClient.updateProduct(entry.ItemID, entry.Stock);
                 bar.tick();
-                continue;
-            }
 
-            promises.push(new Promise(async (resolve, _reject) => {
-                await ekmClient.setProductStock(entry.ItemID, entry.Stock);
-                bar.tick();
                 if (bar.complete) {
+                    await ekmClient.stopBrowser();
                     const tag = `${new Date().toISOString()}.json`.replace(/:/g, '');
                     const updates = ekmClient.getUpdates();
                     const errors = ekmClient.getErrors();
@@ -67,12 +64,11 @@ const ekmClient = new EKMClient();
                     console.log(colors.green.green.bold('✔ All done! 🍻\n'));
                     return;
                 }
-                setTimeout(() => {
-                    return resolve();
-                }, throttle);
-            }));
+            }
+        } catch (err) {
+            console.log(colors.red.bold('\n✘ Fatal error occurred. Aborting...'));
+            console.log({ err });
+            process.exit(1);
         }
-
     });
-
 })();

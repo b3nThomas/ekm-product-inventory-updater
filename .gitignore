@@ -63,6 +63,7 @@ typings/
 # App
 app/auth.json
 app/data.csv
+form.html
 *.js
 *.js.map
 reports
