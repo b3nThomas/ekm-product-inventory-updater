@@ -83,7 +83,7 @@ export class EKMClient {
         await page.click('button[type="submit"]');
 
         try {
-            await page.waitForSelector('#ordersAnalytics', { visible: true, timeout: 20e3 });
+            await page.waitForSelector('#ordersAnalytics', { visible: true, timeout: 90e3 });
             console.log(colors.green.bold('✔ Sign in successful\n'));
             fs.unlinkSync('./form.html');
         } catch (err) {
@@ -108,7 +108,9 @@ export class EKMClient {
             await this.stocksPage.waitForSelector(this.itemStockSelector, { timeout: 10e3 });
             await this.stocksPage.click('td.Stock');
             await this.stocksPage.click(this.itemStockSelector);
-            await this.stocksPage.keyboard.press('Backspace');
+            for (let i = 0; i < 5; i++) {
+                await this.stocksPage.keyboard.press('Backspace');
+            }
             await this.stocksPage.type(this.itemStockSelector, quantity);
             await this.stocksPage.keyboard.press('Enter');
             await this.stocksPage.waitFor(4e3);
