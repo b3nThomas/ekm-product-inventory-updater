@@ -105,7 +105,17 @@ export class EKMClient {
             }
             await this.stocksPage.type(this.searchInputSelector, productId);
             await this.stocksPage.waitFor(5e3);
+            if (await this.stocksPage.$('.no-products.fadeIn')) {
+                const err = { name: 'No products found for this ID' };
+                this.errors.push({ productId, err });
+                return;
+            }
             await this.stocksPage.waitForSelector(this.itemStockSelector, { timeout: 10e3 });
+            if ((await this.stocksPage.$$(this.itemStockSelector)).length > 1) {
+                const err = { name: 'Multiple products found for this ID' };
+                this.errors.push({ productId, err });
+                return;
+            }
             await this.stocksPage.click('td.Stock');
             await this.stocksPage.click(this.itemStockSelector);
             for (let i = 0; i < 5; i++) {
