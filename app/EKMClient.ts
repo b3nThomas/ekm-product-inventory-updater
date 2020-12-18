@@ -46,7 +46,7 @@ export class EKMClient {
     }
 
     public async startBrowser(): Promise<void> {
-        this.browser = await puppeteer.launch({ headless: false, defaultViewport: { height: 640, width: 1300 } });
+        this.browser = await puppeteer.launch({ headless: false, defaultViewport: { height: 640, width: 1700 } });
         console.log(colors.cyan.bold('✔ Browser started\n'));
     }
 
@@ -121,6 +121,7 @@ export class EKMClient {
             for (let i = 0; i < 5; i++) {
                 await this.stocksPage.keyboard.press('Backspace');
             }
+
             await this.stocksPage.type(this.itemStockSelector, quantity);
             await this.stocksPage.keyboard.press('Enter');
             await this.stocksPage.waitFor(4e3);
