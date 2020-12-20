@@ -25,12 +25,12 @@ In order to run this app, you must do the following:
   - Update the field values to include your EKM login credentials
   - These credentials are ignored by .git so will only ever exist on your local machine 👍
 
-## Input CSV file
+### Input CSV file
   - From your source of truth for stock quantites and prices, export a simple report named `data.csv`, based on `./app/data.csv.template`  
   - Move the file to `./app/data.csv`  
   - When run, the tool will use this data to update the stock quantites in EKM  
 
-## Usage  
+## Usage
 
     $ npm run start
 
