@@ -17,7 +17,10 @@ export class EKMClient {
     private stocksUrl: string = 'https://youraccount.30.ekm.net/ekmps/shops/aim/#/productsByCategory/All';
     private stocksPage: puppeteer.Page;
     private searchInputSelector: string = 'div.search input.search-field';
-    private itemStockSelector: string = 'td.Stock input';
+    private stockTDSelector: string = 'td.Stock';
+    private stockInputSelector: string = 'td.Stock input';
+    private priceTDSelector: string = 'td.rightPriceCol';
+    private priceInputSelector: string = 'td.rightPriceCol input';
     private updates: object[] = [];
     private errors: object[] = [];
 
@@ -46,7 +49,7 @@ export class EKMClient {
     }
 
     public async startBrowser(): Promise<void> {
-        this.browser = await puppeteer.launch({ headless: false, defaultViewport: { height: 640, width: 1700 } });
+        this.browser = await puppeteer.launch({ headless: false, defaultViewport: { height: 640, width: 1800 } });
         console.log(colors.cyan.bold('✔ Browser started\n'));
     }
 
@@ -92,7 +95,7 @@ export class EKMClient {
         }
     }
 
-    public async updateProduct(productId: string, quantity: string): Promise<void> {
+    public async updateProduct(productId: string, quantity: string, price: string): Promise<void> {
         try {
             if (!this.stocksPage) {
                 this.stocksPage = await this.browser.newPage();
@@ -107,32 +110,42 @@ export class EKMClient {
             await this.stocksPage.waitFor(5e3);
             if (await this.stocksPage.$('.no-products.fadeIn')) {
                 const err = { name: 'No products found for this ID' };
-                this.errors.push({ productId, err });
+                this.logError({ productId, err });
                 return;
             }
-            await this.stocksPage.waitForSelector(this.itemStockSelector, { timeout: 10e3 });
-            if ((await this.stocksPage.$$(this.itemStockSelector)).length > 1) {
+            await this.stocksPage.waitForSelector(this.stockInputSelector, { timeout: 10e3 });
+            if ((await this.stocksPage.$$(this.stockInputSelector)).length > 1) {
                 const err = { name: 'Multiple products found for this ID' };
-                this.errors.push({ productId, err });
+                this.logError({ productId, err });
                 return;
             }
-            await this.stocksPage.click('td.Stock');
-            await this.stocksPage.click(this.itemStockSelector);
-            for (let i = 0; i < 5; i++) {
-                await this.stocksPage.keyboard.press('Backspace');
-            }
-
-            await this.stocksPage.type(this.itemStockSelector, quantity);
-            await this.stocksPage.keyboard.press('Enter');
-            await this.stocksPage.waitFor(4e3);
-            this.updates.push({ productId, quantity });
+            await this.updateField(this.stockTDSelector, this.stockInputSelector, quantity);
+            await this.updateField(this.priceTDSelector, this.priceInputSelector, price);
+            this.updates.push({ productId, quantity, price });
         } catch (err) {
-            this.errors.push({ productId, err });
+            this.logError({ productId, err });
         }
+    }
+
+    private async updateField(tdSelector: string, inputSelector: string, value: string): Promise<void> {
+        await this.stocksPage.click(tdSelector);
+        await this.stocksPage.click(inputSelector);
+        for (let i = 0; i < 10; i++) {
+            await this.stocksPage.keyboard.press('Backspace');
+        }
+
+        await this.stocksPage.type(inputSelector, value);
+        await this.stocksPage.keyboard.press('Enter');
+        await this.stocksPage.waitFor(4e3);
     }
 
     public getUpdates(): object[] {
         return this.updates;
+    }
+
+
+    public logError(error: object): void {
+        this.errors.push(error);
     }
 
     public getErrors(): object[] {

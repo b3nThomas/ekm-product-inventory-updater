@@ -32,14 +32,14 @@ const ekmClient = new EKMClient();
             const bar = new ProgressBar(colors.magenta.bold('★ :current / :total :bar :percent (:elapseds)'), { total: output.length, width: 75 });
 
             for (const entry of output) {
-                if (!('ItemID' in entry) || !('Stock' in entry)) {
-                    console.error(colors.red.bold('✘ Invalid product entry found. Skipping...'));
-                    console.error(colors.red.bold(entry));
-                    bar.tick();
-                    continue;
+                if (!('ItemID' in entry) || !('Stock' in entry) || !('Price' in entry)) {
+                    console.error(colors.red.bold('✘ Skipping invalid product entry...'));
+                    console.error(colors.red.bold(entry), '\n');
+                    ekmClient.logError({ entry, err: 'CSV entry is missing ItemID, Stock or Price' });
+                } else {
+                    await ekmClient.updateProduct(entry.ItemID, entry.Stock, entry.Price.replace('£', ''));
                 }
 
-                await ekmClient.updateProduct(entry.ItemID, entry.Stock);
                 bar.tick();
 
                 if (bar.complete) {

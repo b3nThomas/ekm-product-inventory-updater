@@ -1,7 +1,8 @@
 # ekm-product-inventory-updater
-Simple app which accepts .csv files to update product quantities in the `EKM - Advanced Inventory Manager`.  
+Simple app which uses a .csv file to update product quantities and prices in the `EKM - Advanced Inventory Manager`.  
 This previously used their API, however they're now charging a lot of extra money for that service.  
-It now uses <software> to automate the manual update process which is free!  
+This now uses [puppeteer](https://github.com/puppeteer/puppeteer) to automate the manual update process.  
+It's much slower, but free of charge!  
 
 ## Installation
 
@@ -25,7 +26,7 @@ In order to run this app, you must do the following:
   - These credentials are ignored by .git so will only ever exist on your local machine 👍
 
 ## Input CSV file
-  - From your source of truth for stock quantites, export a simple report named `data.csv`, based on `./app/data.csv.template`  
+  - From your source of truth for stock quantites and prices, export a simple report named `data.csv`, based on `./app/data.csv.template`  
   - Move the file to `./app/data.csv`  
   - When run, the tool will use this data to update the stock quantites in EKM  
 
@@ -34,3 +35,6 @@ In order to run this app, you must do the following:
     $ npm run start
 
 Job's a gooden 👍
+
+## Reporting
+A timestamped report will be outputted under `./reports` which contains all updates and errors that occurred during an import.  

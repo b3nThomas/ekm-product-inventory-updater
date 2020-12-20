@@ -1,2 +1,2 @@
-ItemID,Stock
-<some-id>,<a-number>
+ItemID,Stock,Price
+<some-id>,<a-number>,<a-price-using-0*.00-format>
