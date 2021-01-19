@@ -4,10 +4,8 @@
     "description": "Simple tool which accepts .csv files to update product quantities in the EKM - Advanced Inventory Manager This project uses `Node 10.16.1` and Typescript",
     "main": "./app/start.js",
     "scripts": {
-        "build": "npm run -s format && npm run -s lint && npm run -s transpile",
+        "build": "npm run -s format && npm run -s transpile",
         "format": "npx prettier --list-different --write \"**/*\"",
-        "lint": "npx tslint -p tsconfig.json",
-        "lint:fix": "npx tslint --fix -p tsconfig.json",
         "start": "npm run -s build && node ./app/start.js",
         "transpile": "tsc -p .",
         "watch": "nodemon -e ts --exec \"npm run start\""
@@ -28,8 +26,6 @@
         "@types/puppeteer": "^5.4.2",
         "nodemon": "^2.0.7",
         "prettier": "^2.2.1",
-        "tslint": "^6.1.3",
-        "tslint-eslint-rules": "^5.4.0",
         "typescript": "^4.1.3"
     },
     "dependencies": {
