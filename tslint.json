@@ -1,15 +1,10 @@
 {
-    "extends": [
-        "tslint-eslint-rules"
-    ],
+    "extends": ["tslint-eslint-rules"],
     "jsRules": {
         "no-empty": true
     },
     "rules": {
-        "object-literal-key-quotes": [
-            true,
-            "consistent-as-needed"
-        ],
+        "object-literal-key-quotes": [true, "consistent-as-needed"],
         "trailing-comma": [
             true,
             {
@@ -19,11 +14,7 @@
         ],
         "no-conditional-assignment": true,
         "no-constant-condition": true,
-        "no-console": [
-            false,
-            "log",
-            "error"
-        ],
+        "no-console": [false, "log", "error"],
         "no-control-regex": true,
         "no-parameter-properties": true,
         "no-debugger": true,
@@ -32,10 +23,7 @@
         "no-ex-assign": true,
         "no-extra-boolean-cast": true,
         "no-extra-semi": true,
-        "no-inner-declarations": [
-            true,
-            "functions"
-        ],
+        "no-inner-declarations": [true, "functions"],
         "no-invalid-regexp": true,
         "no-irregular-whitespace": true,
         "no-regex-spaces": true,
@@ -45,16 +33,10 @@
         "no-require-imports": true,
         "use-isnan": true,
         "valid-typeof": true,
-        "cyclomatic-complexity": [
-            true,
-            35
-        ],
+        "cyclomatic-complexity": [true, 35],
         "curly": true,
         "switch-default": true,
-        "triple-equals": [
-            true,
-            "allow-null-check"
-        ],
+        "triple-equals": [true, "allow-null-check"],
         "forin": true,
         "no-eval": true,
         "no-empty": true,
@@ -62,21 +44,12 @@
         "no-construct": true,
         "no-duplicate-variable": true,
         "radix": true,
-        "handle-callback-err": [
-            true,
-            "error"
-        ],
+        "handle-callback-err": [true, "error"],
         "prefer-const": true,
         "eofline": true,
         "class-name": true,
-        "comment-format": [
-            true,
-            "check-space"
-        ],
-        "indent": [
-            true,
-            "spaces"
-        ],
+        "comment-format": [true, "check-space"],
+        "indent": [true, "spaces"],
         "ter-indent": [
             true,
             4,
@@ -95,11 +68,7 @@
             "check-finally",
             "check-else"
         ],
-        "quotemark": [
-            true,
-            "single",
-            "avoid-template"
-        ],
+        "quotemark": [true, "single", "avoid-template"],
         "typedef-whitespace": [
             true,
             {
@@ -110,10 +79,7 @@
                 "variable-declaration": "nospace"
             }
         ],
-        "variable-name": [
-            true,
-            "ban-keywords"
-        ],
+        "variable-name": [true, "ban-keywords"],
         "member-access": true,
         "whitespace": [
             true,
@@ -123,10 +89,7 @@
             "check-separator",
             "check-type"
         ],
-        "space-in-parens": [
-            true,
-            "never"
-        ],
+        "space-in-parens": [true, "never"],
         "object-curly-spacing": true,
         "typedef": {
             "options": [
@@ -137,10 +100,6 @@
             ],
             "severity": "warning"
         },
-        "array-bracket-spacing": [
-            true,
-            "never"
-        ]
+        "array-bracket-spacing": [true, "never"]
     }
 }
-

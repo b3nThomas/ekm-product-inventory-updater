@@ -64,6 +64,9 @@ typings/
 app/auth.json
 app/data.csv
 form.html
+reports
+
 *.js
 *.js.map
-reports
+
+!.prettierrc.js

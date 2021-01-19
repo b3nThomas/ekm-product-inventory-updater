@@ -14,7 +14,8 @@ export class EKMClient {
     private browser: puppeteer.Browser;
     private loginUrl: string = 'https://www.ekm.com/login';
     private loginFrameSelector: string = 'iframe.login-form-frame';
-    private stocksUrl: string = 'https://youraccount.30.ekm.net/ekmps/shops/aim/#/productsByCategory/All';
+    private stocksUrl: string =
+        'https://youraccount.30.ekm.net/ekmps/shops/aim/#/productsByCategory/All';
     private stocksPage: puppeteer.Page;
     private searchInputSelector: string = 'div.search input.search-field';
     private productCodeTDSelector: string = 'td.ProdCode';
@@ -35,22 +36,33 @@ export class EKMClient {
             authFile = fs.readFileSync(path.resolve('app', 'auth.json'), { encoding: 'utf-8' });
             authFile = JSON.parse(authFile);
         } catch (err) {
-            console.log(colors.red.bold('Unable to find ./app/auth.json. Please see README.md. Aborting...\n'));
+            console.log(
+                colors.red.bold(
+                    'Unable to find ./app/auth.json. Please see README.md. Aborting...\n'
+                )
+            );
             return process.exit(1);
         }
         if (!authFile.username || !authFile.password) {
-            console.log(colors.red.bold('./app/auth.json is incorrectly configured. Please see README.md. Aborting...\n'));
+            console.log(
+                colors.red.bold(
+                    './app/auth.json is incorrectly configured. Please see README.md. Aborting...\n'
+                )
+            );
             return process.exit(1);
         }
         this.auth = {
             username: authFile.username,
-            password: authFile.password
-        }
+            password: authFile.password,
+        };
         console.log(colors.green.bold('✔ Credentials authorised\n'));
     }
 
     public async startBrowser(): Promise<void> {
-        this.browser = await puppeteer.launch({ headless: false, defaultViewport: { height: 640, width: 1800 } });
+        this.browser = await puppeteer.launch({
+            headless: false,
+            defaultViewport: { height: 640, width: 1800 },
+        });
         console.log(colors.cyan.bold('✔ Browser started\n'));
     }
 
@@ -75,7 +87,10 @@ export class EKMClient {
         let { data } = await axios.get(frameUrl);
 
         // Replace the redirect code
-        data = data.replace('if (window.top === window) window.location.href = \'https://www.ekm.com/login.asp\';', '');
+        data = data.replace(
+            "if (window.top === window) window.location.href = 'https://www.ekm.com/login.asp';",
+            ''
+        );
 
         // Write html to file and navigate to it
         fs.writeFileSync('./form.html', data);
@@ -91,7 +106,9 @@ export class EKMClient {
             console.log(colors.green.bold('✔ Sign in successful\n'));
             fs.unlinkSync('./form.html');
         } catch (err) {
-            console.log(colors.red.bold('Unable to sign in to EKM. Please see README.md. Aborting...\n'));
+            console.log(
+                colors.red.bold('Unable to sign in to EKM. Please see README.md. Aborting...\n')
+            );
             process.exit(1);
         }
     }
@@ -101,7 +118,10 @@ export class EKMClient {
             if (!this.stocksPage) {
                 this.stocksPage = await this.browser.newPage();
                 await this.stocksPage.goto(this.stocksUrl);
-                await this.stocksPage.waitForSelector(this.searchInputSelector, { visible: true, timeout: 20e3 });
+                await this.stocksPage.waitForSelector(this.searchInputSelector, {
+                    visible: true,
+                    timeout: 20e3,
+                });
             }
             await this.stocksPage.click(this.searchInputSelector);
             for (let i = 0; i < 30; i++) {
@@ -114,6 +134,17 @@ export class EKMClient {
                 this.logError({ productId, err });
                 return;
             }
+
+            const ids = [];
+            for (const product of await this.stocksPage.$$(this.productCodeTDSelector)) {
+                const id = await this.stocksPage.evaluate((el) => el.textContent, product);
+                ids.push(id);
+            }
+
+            const rowIndex = ids.findIndex((id) => id === productId);
+            console.log('rowIndex', rowIndex);
+            console.log('ids[rowIndex]', ids[rowIndex]);
+
             await this.stocksPage.waitForSelector(this.stockInputSelector, { timeout: 10e3 });
             if ((await this.stocksPage.$$(this.stockInputSelector)).length > 1) {
                 const err = { name: 'Multiple products found for this ID' };
@@ -128,7 +159,11 @@ export class EKMClient {
         }
     }
 
-    private async updateField(tdSelector: string, inputSelector: string, value: string): Promise<void> {
+    private async updateField(
+        tdSelector: string,
+        inputSelector: string,
+        value: string
+    ): Promise<void> {
         await this.stocksPage.click(tdSelector);
         await this.stocksPage.click(inputSelector);
         for (let i = 0; i < 10; i++) {
@@ -143,7 +178,6 @@ export class EKMClient {
     public getUpdates(): object[] {
         return this.updates;
     }
-
 
     public logError(error: object): void {
         this.errors.push(error);
