@@ -17,6 +17,7 @@ export class EKMClient {
     private stocksUrl: string = 'https://youraccount.30.ekm.net/ekmps/shops/aim/#/productsByCategory/All';
     private stocksPage: puppeteer.Page;
     private searchInputSelector: string = 'div.search input.search-field';
+    private productCodeTDSelector: string = 'td.ProdCode';
     private stockTDSelector: string = 'td.Stock';
     private stockInputSelector: string = 'td.Stock input';
     private priceTDSelector: string = 'td.rightPriceCol';
@@ -107,7 +108,7 @@ export class EKMClient {
                 await this.stocksPage.keyboard.press('Backspace');
             }
             await this.stocksPage.type(this.searchInputSelector, productId);
-            await this.stocksPage.waitFor(5e3);
+            await this.stocksPage.waitForTimeout(5e3);
             if (await this.stocksPage.$('.no-products.fadeIn')) {
                 const err = { name: 'No products found for this ID' };
                 this.logError({ productId, err });
@@ -136,7 +137,7 @@ export class EKMClient {
 
         await this.stocksPage.type(inputSelector, value);
         await this.stocksPage.keyboard.press('Enter');
-        await this.stocksPage.waitFor(4e3);
+        await this.stocksPage.waitForTimeout(4e3);
     }
 
     public getUpdates(): object[] {
