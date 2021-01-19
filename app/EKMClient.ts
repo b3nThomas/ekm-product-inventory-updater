@@ -135,42 +135,49 @@ export class EKMClient {
                 return;
             }
 
-            const ids = [];
-            for (const product of await this.stocksPage.$$(this.productCodeTDSelector)) {
-                const id = await this.stocksPage.evaluate((el) => el.textContent, product);
-                ids.push(id);
-            }
-
-            const rowIndex = ids.findIndex((id) => id === productId);
-            console.log('rowIndex', rowIndex);
-            console.log('ids[rowIndex]', ids[rowIndex]);
-
-            await this.stocksPage.waitForSelector(this.stockInputSelector, { timeout: 10e3 });
-            if ((await this.stocksPage.$$(this.stockInputSelector)).length > 1) {
-                const err = { name: 'Multiple products found for this ID' };
+            const rowNumber = await this.getRowNumber(productId);
+            if (!rowNumber) {
+                const err = { name: 'Unable to calculate the correct row for this ID' };
                 this.logError({ productId, err });
                 return;
             }
-            await this.updateField(this.stockTDSelector, this.stockInputSelector, quantity);
-            await this.updateField(this.priceTDSelector, this.priceInputSelector, price);
+
+            await this.updateField(
+                rowNumber,
+                this.stockTDSelector,
+                this.stockInputSelector,
+                quantity
+            );
+            await this.updateField(rowNumber, this.priceTDSelector, this.priceInputSelector, price);
             this.updates.push({ productId, quantity, price });
         } catch (err) {
             this.logError({ productId, err });
         }
     }
 
+    private async getRowNumber(productId: string): Promise<number> {
+        const ids = [];
+        for (const product of await this.stocksPage.$$(this.productCodeTDSelector)) {
+            const id = await this.stocksPage.evaluate((el) => el.textContent, product);
+            ids.push(id);
+        }
+
+        return ids.findIndex((id) => id === productId) + 1;
+    }
+
     private async updateField(
+        rowNumber: number,
         tdSelector: string,
         inputSelector: string,
         value: string
     ): Promise<void> {
-        await this.stocksPage.click(tdSelector);
-        await this.stocksPage.click(inputSelector);
+        await this.stocksPage.click(`tbody:nth-of-type(${rowNumber}) ${tdSelector}`);
+        await this.stocksPage.click(`tbody:nth-of-type(${rowNumber}) ${inputSelector}`);
         for (let i = 0; i < 10; i++) {
             await this.stocksPage.keyboard.press('Backspace');
         }
 
-        await this.stocksPage.type(inputSelector, value);
+        await this.stocksPage.type(`tbody:nth-of-type(${rowNumber}) ${inputSelector}`, value);
         await this.stocksPage.keyboard.press('Enter');
         await this.stocksPage.waitForTimeout(4e3);
     }
